@@ -9,6 +9,7 @@ function DetailsView() {
     const dispatch = useDispatch();
     const history = useHistory();
     const detailsData = useSelector(store => store.detailsData);
+    console.log('detailsdata:', detailsData);
 
 
     useEffect(() => {
@@ -18,13 +19,11 @@ function DetailsView() {
     return (
         <main>
             <section className="movie">
-                return (
                 <h1>{detailsData.title}</h1>
-                <h5>Genres: {detailsData.genres}</h5>
+                <h5>Genres: {detailsData.genres.join(', ')}</h5>
                 <h5>Summary:</h5>
                 <p>{detailsData.description}</p>
                 <img src={detailsData.poster} alt={detailsData.title} />
-                );
             </section>
         </main>
 
