@@ -8,12 +8,13 @@ import { Provider } from 'react-redux';
 import logger from 'redux-logger';
 // Import saga middleware
 import createSagaMiddleware from 'redux-saga';
-import { takeEvery, put } from 'redux-saga/effects';
+import { takeEvery, put, takeLatest } from 'redux-saga/effects';
 import axios from 'axios';
 
 // Create the rootSaga generator function
 function* rootSaga() {
     yield takeEvery('FETCH_MOVIES', fetchAllMovies);
+    yield takeLatest('FETCH_DETAILS_DATA', fetchDetailsData)
 }
 
 function* fetchAllMovies() {
@@ -26,7 +27,17 @@ function* fetchAllMovies() {
     } catch {
         console.log('get all error');
     }
-        
+
+}
+
+function* fetchDetailsData(action) {
+    try {
+        const detailsData = yield axios.get(`api/details/${action.payload}`)
+        yield put({ type: 'SET_DETAILS', payload: detailsData.data })
+    }
+    catch (error) {
+
+    }
 }
 
 // Create sagaMiddleware
@@ -52,11 +63,21 @@ const genres = (state = [], action) => {
     }
 }
 
+const detailsData = (state = [], action) => {
+    switch (action.type) {
+        case 'SET_DETAILS':
+            return action.payload;
+        default:
+            return state;
+    }
+}
+
 // Create one store that all components can use
 const storeInstance = createStore(
     combineReducers({
         movies,
         genres,
+        detailsData,
     }),
     // Add sagaMiddleware to our store
     applyMiddleware(sagaMiddleware, logger),

@@ -1,26 +1,29 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory, useParams } from 'react-router-dom/cjs/react-router-dom';
+
 
 function DetailsView() {
 
+    const params = useParams();
     const dispatch = useDispatch();
-    const movies = useSelector(store => store.movies);
+    const history = useHistory();
+    const detailsData = useSelector(store => store.detailsData);
+
 
     useEffect(() => {
-        dispatch({ type: 'FETCH_MOVIES' });
+        dispatch({ type: 'FETCH_DETAILS_DATA', payload: params.id });
     }, []);
 
     return (
         <main>
             <section className="movie">
                 return (
-                <div key={movie.id} >
-                    <h1>{movie.title}</h1>
-                    <h5>Genres: {movie.genre}</h5>
-                    <h5>Summary:</h5>
-                    <p>{movie.description}</p>
-                    <img src={movie.poster} alt={movie.title} />
-                </div>
+                <h1>{detailsData.title}</h1>
+                <h5>Genres: {detailsData.genres}</h5>
+                <h5>Summary:</h5>
+                <p>{detailsData.description}</p>
+                <img src={detailsData.poster} alt={detailsData.title} />
                 );
             </section>
         </main>
